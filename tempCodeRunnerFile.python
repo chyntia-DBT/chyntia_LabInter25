@@ -1,2 +1,0 @@
-x = input('Masukan satu angka')
-print(x*2)
