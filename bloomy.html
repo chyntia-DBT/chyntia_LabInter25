@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloomy — Handcrafted Flowers for Sweet Moments</title>
+<style>
+  :root{
+    --pink:#e88ba0;
+    --pink-dark:#d16a82;
+    --cream:#fff7f2;
+    --cream-2:#fdeee7;
+    --green:#5c7a52;
+    --green-dark:#3f5638;
+    --gold:#d9a441;
+    --ink:#3a2e2c;
+    --white:#ffffff;
+    --shadow: 0 10px 30px rgba(58,46,44,0.12);
+    --radius: 18px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', Helvetica, Arial, sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.6;
+  }
+  h1,h2,h3{
+    font-family:'Georgia', 'Times New Roman', serif;
+    margin:0 0 .4em 0;
+    color:var(--green-dark);
+  }
+  p{margin:0 0 1em 0;}
+  a{color:inherit;}
+  .container{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(255,247,242,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(58,46,44,0.08);
+  }
+  nav .container{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:8px;
+    font-family:'Georgia',serif;
+    font-size:1.4rem;
+    font-weight:bold;
+    color:var(--green-dark);
+  }
+  .brand span.flower{font-size:1.5rem;}
+  .navlinks{display:flex; gap:22px; font-size:.95rem;}
+  .navlinks a{text-decoration:none; color:var(--ink); opacity:.85; transition:.2s;}
+  .navlinks a:hover{opacity:1; color:var(--pink-dark);}
+  /* HERO */
+  .hero{
+    position:relative;
+    padding:90px 24px 100px;
+    text-align:center;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(232,139,160,0.25), transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(217,164,65,0.2), transparent 40%),
+      radial-gradient(circle at 50% 90%, rgba(92,122,82,0.15), transparent 45%),
+      linear-gradient(180deg, var(--cream), var(--cream-2));
+    overflow:hidden;
+  }
+  .hero .petals{
+    position:absolute; inset:0; pointer-events:none; font-size:1.8rem; opacity:.5;
+  }
+  .hero-content{position:relative; z-index:2;}
+  .hero-eyebrow{
+    display:inline-block;
+    letter-spacing:2px;
+    font-size:.8rem;
+    text-transform:uppercase;
+    color:var(--pink-dark);
+    background:rgba(232,139,160,0.15);
+    padding:6px 16px;
+    border-radius:30px;
+    margin-bottom:20px;
+  }
+  .hero h1{
+    font-size:3.4rem;
+    margin-bottom:14px;
+  }
+  .hero .tagline{
+    font-size:1.25rem;
+    font-style:italic;
+    color:var(--ink);
+    opacity:.85;
+    margin-bottom:34px;
+  }
+  .hero-ctas{display:flex; gap:16px; justify-content:center; flex-wrap:wrap;}
+  .btn{
+    display:inline-block;
+    padding:14px 30px;
+    border-radius:40px;
+    font-size:1rem;
+    font-weight:600;
+    cursor:pointer;
+    border:none;
+    text-decoration:none;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{
+    background:var(--pink-dark);
+    color:white;
+    box-shadow:0 8px 20px rgba(209,106,130,0.35);
+  }
+  .btn-outline{
+    background:transparent;
+    color:var(--green-dark);
+    border:2px solid var(--green-dark);
+  }
+  /* SECTION GENERIC */
+  section{padding:80px 0;}
+  .section-head{text-align:center; max-width:640px; margin:0 auto 50px;}
+  .section-eyebrow{
+    text-transform:uppercase; letter-spacing:2px; font-size:.78rem;
+    color:var(--pink-dark); font-weight:700; margin-bottom:8px;
+  }
+  .section-head h2{font-size:2.1rem;}
+  .section-head p{opacity:.75;}
+  /* QUIZ */
+  .quiz-section{
+    background:linear-gradient(180deg, var(--cream-2), var(--cream));
+  }
+  .quiz-card{
+    max-width:640px;
+    margin:0 auto;
+    background:var(--white);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:44px 40px;
+    position:relative;
+    overflow:hidden;
+    min-height:380px;
+  }
+  .quiz-progress-track{
+    height:6px; background:var(--cream-2); border-radius:6px; overflow:hidden; margin-bottom:34px;
+  }
+  .quiz-progress-fill{
+    height:100%; width:0%; background:linear-gradient(90deg, var(--pink), var(--gold));
+    transition:width .4s ease;
+  }
+  .quiz-step-label{
+    font-size:.8rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--pink-dark); font-weight:700; margin-bottom:6px;
+  }
+  .quiz-question{
+    font-family:'Georgia',serif;
+    font-size:1.6rem;
+    color:var(--green-dark);
+    margin-bottom:28px;
+  }
+  .quiz-options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .quiz-option{
+    border:2px solid var(--cream-2);
+    background:var(--cream);
+    border-radius:14px;
+    padding:18px 16px;
+    text-align:center;
+    cursor:pointer;
+    font-weight:600;
+    font-size:1rem;
+    color:var(--ink);
+    transition:.18s ease;
+  }
+  .quiz-option:hover{
+    border-color:var(--pink);
+    background:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(232,139,160,0.2);
+  }
+  .quiz-option .emoji{display:block; font-size:1.6rem; margin-bottom:6px;}
+  .quiz-panel{
+    animation:fadeSlideIn .38s ease;
+  }
+  @keyframes fadeSlideIn{
+    from{opacity:0; transform:translateX(24px);}
+    to{opacity:1; transform:translateX(0);}
+  }
+  .quiz-back{
+    margin-top:26px;
+    background:none; border:none; color:var(--green-dark); opacity:.6;
+    cursor:pointer; font-size:.9rem; text-decoration:underline;
+  }
+  .quiz-back:hover{opacity:1;}
+  /* RESULT */
+  .result-panel{text-align:center;}
+  .result-flower-emoji{font-size:3.4rem; margin-bottom:10px;}
+  .result-name{font-size:1.7rem; color:var(--pink-dark); font-family:'Georgia',serif; margin-bottom:6px;}
+  .result-price{font-weight:700; color:var(--green-dark); margin-bottom:14px; font-size:1.15rem;}
+  .result-desc{opacity:.85; margin-bottom:26px;}
+  .result-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
+  .btn-small{padding:11px 22px; font-size:.92rem;}
+  .btn-ghost{background:var(--cream-2); color:var(--green-dark);}
+  /* BOUQUETS GRID */
+  .bouquet-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:26px;
+  }
+  .bouquet-card{
+    background:var(--white);
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    display:flex; flex-direction:column;
+    transition:transform .2s ease;
+  }
+  .bouquet-card:hover{transform:translateY(-6px);}
+  .bouquet-visual{
+    height:150px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:3.6rem;
+  }
+  .bouquet-body{padding:22px 22px 26px; flex:1; display:flex; flex-direction:column;}
+  .bouquet-body h3{font-size:1.25rem; margin-bottom:6px;}
+  .bouquet-tag{
+    font-size:.72rem; text-transform:uppercase; letter-spacing:1px;
+    color:var(--pink-dark); font-weight:700; margin-bottom:10px;
+  }
+  .bouquet-body p.desc{font-size:.93rem; opacity:.8; flex:1;}
+  .bouquet-footer{
+    display:flex; align-items:center; justify-content:space-between; margin-top:14px;
+  }
+  .price-tag{font-weight:700; color:var(--green-dark); font-size:1.1rem;}
+  /* COLORS + ACCESSORIES */
+  .two-col{
+    display:grid; grid-template-columns:1fr 1fr; gap:40px;
+  }
+  .chip-list{display:flex; flex-wrap:wrap; gap:12px;}
+  .color-chip{
+    display:flex; align-items:center; gap:8px;
+    background:var(--white); border-radius:30px; padding:8px 16px 8px 8px;
+    box-shadow:var(--shadow); font-size:.9rem; font-weight:600;
+  }
+  .swatch{width:26px; height:26px; border-radius:50%; display:inline-block; border:2px solid rgba(0,0,0,0.06);}
+  .accessory-list{display:flex; flex-direction:column; gap:12px;}
+  .accessory-item{
+    display:flex; align-items:center; gap:14px;
+    background:var(--white); border-radius:14px; padding:14px 18px;
+    box-shadow:var(--shadow);
+  }
+  .accessory-item .emoji{font-size:1.6rem;}
+  .accessory-item .name{font-weight:700; flex:1;}
+  .accessory-item .price{color:var(--green-dark); font-weight:700;}
+  /* REVIEWS */
+  .reviews-section{background:linear-gradient(180deg, var(--cream), var(--cream-2));}
+  .review-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .review-card{
+    background:var(--white); border-radius:18px; padding:28px; box-shadow:var(--shadow);
+    position:relative;
+  }
+  .review-card .stars{color:var(--gold); margin-bottom:12px; font-size:1.1rem;}
+  .review-card p.quote{font-style:italic; opacity:.85; margin-bottom:16px;}
+  .review-card .name{font-weight:700; color:var(--green-dark);}
+  /* CONTACT */
+  .contact-wrap{
+    display:grid; grid-template-columns:1fr 1.2fr; gap:46px; align-items:start;
+  }
+  .contact-info h3{margin-bottom:14px;}
+  .contact-info .info-item{
+    display:flex; gap:12px; margin-bottom:18px; align-items:flex-start;
+  }
+  .contact-info .info-item .emoji{font-size:1.3rem;}
+  .contact-form{
+    background:var(--white); border-radius:20px; padding:34px; box-shadow:var(--shadow);
+  }
+  .form-row{margin-bottom:18px;}
+  .form-row label{
+    display:block; font-weight:600; margin-bottom:6px; font-size:.9rem; color:var(--green-dark);
+  }
+  .form-row input, .form-row textarea{
+    width:100%; padding:12px 14px; border-radius:10px; border:2px solid var(--cream-2);
+    font-size:.95rem; font-family:inherit; background:var(--cream);
+    transition:border-color .15s ease;
+  }
+  .form-row input:focus, .form-row textarea:focus{
+    outline:none; border-color:var(--pink);
+  }
+  .form-two{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .success-msg{
+    display:none;
+    background:#eaf4e6; color:var(--green-dark); border-radius:12px; padding:16px 18px;
+    margin-top:16px; font-weight:600;
+  }
+  /* FOOTER */
+  footer{
+    background:var(--green-dark); color:#f4ece7; text-align:center; padding:36px 24px; font-size:.9rem;
+  }
+  footer .brand{color:#fff; justify-content:center; margin-bottom:8px;}
+  /* RESPONSIVE */
+  @media(max-width:860px){
+    .bouquet-grid{grid-template-columns:1fr 1fr;}
+    .review-grid{grid-template-columns:1fr;}
+    .two-col{grid-template-columns:1fr;}
+    .contact-wrap{grid-template-columns:1fr;}
+    .form-two{grid-template-columns:1fr;}
+    .navlinks{display:none;}
+    .hero h1{font-size:2.4rem;}
+  }
+  @media(max-width:560px){
+    .bouquet-grid{grid-template-columns:1fr;}
+    .quiz-options{grid-template-columns:1fr;}
+    .quiz-card{padding:30px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="brand"><span class="flower">🌸</span> Bloomy</div>
+    <div class="navlinks">
+      <a href="#quiz">Find My Bouquet</a>
+      <a href="#menu">Bouquets</a>
+      <a href="#extras">Colors & Add-ons</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="petals">🌷 &nbsp; &nbsp; &nbsp; 🌼 &nbsp; &nbsp; &nbsp; &nbsp; 🌸 &nbsp; &nbsp; &nbsp; &nbsp; 🌺</div>
+  <div class="container hero-content">
+    <span class="hero-eyebrow">Boutique Florist</span>
+    <h1>Bloomy</h1>
+    <p class="tagline">"Handcrafted flower for sweet moment"</p>
+    <div class="hero-ctas">
+      <a href="#quiz" class="btn btn-primary">🌼 Find My Perfect Bouquet</a>
+      <a href="#menu" class="btn btn-outline">View Bouquets</a>
+    </div>
+  </div>
+</header>
+
+<!-- QUIZ -->
+<section class="quiz-section" id="quiz">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Let us help</div>
+      <h2>Find Your Right Bouquet</h2>
+      <p>Answer three quick questions and we'll recommend the perfect bouquet for your moment.</p>
+    </div>
+
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-progress-track"><div class="quiz-progress-fill" id="progressFill"></div></div>
+      <div id="quizContent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Our Bouquets</div>
+      <h2>Handcrafted With Love</h2>
+      <p>Every bouquet is arranged fresh, by hand, the day it ships.</p>
+    </div>
+    <div class="bouquet-grid" id="bouquetGrid"></div>
+  </div>
+</section>
+
+<!-- COLORS & ACCESSORIES -->
+<section id="extras" style="background:linear-gradient(180deg, var(--cream), var(--cream-2));">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Make It Yours</div>
+      <h2>Colors & Add-ons</h2>
+      <p>Customize any bouquet with your favorite colors and a little something extra.</p>
+    </div>
+    <div class="two-col">
+      <div>
+        <h3>🎨 Available Colors</h3>
+        <div class="chip-list" id="colorChips"></div>
+      </div>
+      <div>
+        <h3>🎁 Add-ons & Accessories</h3>
+        <div class="accessory-list" id="accessoryList"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Kind Words</div>
+      <h2>What Our Customers Say</h2>
+    </div>
+    <div class="review-grid" id="reviewGrid"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Place An Order</div>
+      <h2>Contact Us</h2>
+      <p>Tell us about your occasion and we'll take care of the rest.</p>
+    </div>
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <h3>Visit or Reach Us</h3>
+        <div class="info-item"><span class="emoji">📍</span><div>123 Petal Street, Jakarta</div></div>
+        <div class="info-item"><span class="emoji">📞</span><div>+62 812 3456 7890</div></div>
+        <div class="info-item"><span class="emoji">✉️</span><div>hello@bloomy.flowers</div></div>
+        <div class="info-item"><span class="emoji">🕒</span><div>Mon–Sat, 9am – 7pm</div></div>
+      </div>
+      <div class="contact-form">
+        <form id="orderForm">
+          <div class="form-two">
+            <div class="form-row">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" required placeholder="Your name">
+            </div>
+            <div class="form-row">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" required placeholder="+62 ...">
+            </div>
+          </div>
+          <div class="form-row">
+            <label for="email">Email</label>
+            <input type="email" id="email" required placeholder="you@example.com">
+          </div>
+          <div class="form-row">
+            <label for="date">Date Needed</label>
+            <input type="date" id="date" required>
+          </div>
+          <div class="form-row">
+            <label for="message">Message</label>
+            <textarea id="message" rows="4" placeholder="Tell us about the occasion, colors, budget..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">Send Order Request 🌸</button>
+          <div class="success-msg" id="successMsg">Thank you! Your request has been noted. We'll reach out shortly to confirm your order 🌷</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="brand">🌸 Bloomy</div>
+  <p>"Handcrafted flower for sweet moment"</p>
+  <p>&copy; <span id="year"></span> Bloomy Boutique Florist. All rights reserved.</p>
+</footer>
+
+<script>
+/* ---------- DATA ---------- */
+const bouquets = [
+  { id:'sweet-beginnings', name:'Sweet Beginnings', emoji:'🌷', tag:'Birthday', desc:'A playful mix of pink and yellow tulips with sprigs of baby\'s breath — bright and fun.', price:45, occasion:['birthday','just-because'], colors:['pink','yellow'], budget:['under50'] },
+  { id:'just-because-sunshine', name:'Just Because Sunshine', emoji:'🌻', tag:'Just Because', desc:'Sunflowers and orange ranunculus for a bouquet that says "thinking of you", no reason needed.', price:35, occasion:['just-because','birthday'], colors:['yellow','orange'], budget:['under50'] },
+  { id:'golden-anniversary', name:'Golden Anniversary', emoji:'🌹', tag:'Anniversary', desc:'Deep red roses accented with gold-dusted eucalyptus for a timeless, romantic feel.', price:95, occasion:['anniversary'], colors:['red','gold'], budget:['50-100'] },
+  { id:'romance-in-bloom', name:'Romance in Bloom', emoji:'🌺', tag:'Anniversary / Wedding', desc:'Garden roses in red and blush pink, hand-tied with silk ribbon for an elegant statement.', price:150, occasion:['anniversary','wedding'], colors:['red','pink'], budget:['100-200'] },
+  { id:'eternal-vow', name:'Eternal Vow', emoji:'💐', tag:'Wedding', desc:'White peonies and soft greenery arranged in a classic bridal cascade style.', price:180, occasion:['wedding'], colors:['white','green'], budget:['100-200'] },
+  { id:'grand-celebration', name:'Grand Celebration', emoji:'🎉', tag:'Wedding / Birthday', desc:'An abundant mixed arrangement bursting with seasonal blooms — our most lavish design.', price:220, occasion:['wedding','birthday','anniversary'], colors:['mixed','white'], budget:['200+'] }
+];
+
+const colors = [
+  {name:'Pink', hex:'#e88ba0'},
+  {name:'Red', hex:'#c0392b'},
+  {name:'White', hex:'#ffffff'},
+  {name:'Yellow', hex:'#e8c34a'},
+  {name:'Purple', hex:'#9b7bb5'},
+  {name:'Orange', hex:'#e08a3c'},
+  {name:'Mixed / Rainbow', hex:'linear-gradient(90deg,#e88ba0,#e8c34a,#9b7bb5)'}
+];
+
+const accessories = [
+  {emoji:'🏺', name:'Ceramic Vase', price:'+$15'},
+  {emoji:'🎀', name:'Silk Ribbon & Bow', price:'+$5'},
+  {emoji:'💌', name:'Personalized Gift Card', price:'+$3'},
+  {emoji:'🍫', name:'Chocolate Box', price:'+$12'},
+  {emoji:'🎈', name:'Balloon Add-on', price:'+$8'}
+];
+
+const reviews = [
+  {name:'Sarah T.', text:'The bouquet quiz recommended exactly what I needed for my anniversary — my wife cried, happy tears! Absolutely stunning arrangement.'},
+  {name:'David K.', text:'Ordered a birthday bouquet last minute and Bloomy delivered fresh, gorgeous flowers same day. Will order again!'},
+  {name:'Amanda R.', text:'Best florist in town. The wedding bouquet was even more beautiful in person than the photos. Highly recommend!'}
+];
+
+/* ---------- RENDER STATIC SECTIONS ---------- */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const bouquetGrid = document.getElementById('bouquetGrid');
+bouquets.forEach(b=>{
+  const card = document.createElement('div');
+  card.className='bouquet-card';
+  card.innerHTML = `
+    <div class="bouquet-visual" style="background:${bgForBouquet(b)}">${b.emoji}</div>
+    <div class="bouquet-body">
+      <div class="bouquet-tag">${b.tag}</div>
+      <h3>${b.name}</h3>
+      <p class="desc">${b.desc}</p>
+      <div class="bouquet-footer">
+        <span class="price-tag">$${b.price}</span>
+        <a href="#contact" class="btn btn-ghost btn-small">Order</a>
+      </div>
+    </div>`;
+  bouquetGrid.appendChild(card);
+});
+
+function bgForBouquet(b){
+  const map = {pink:'#fbe1e6', red:'#f6dede', white:'#f3f3ee', yellow:'#fbf1d6', gold:'#fbf1d6', green:'#e6ede3', orange:'#fce6d3', mixed:'linear-gradient(135deg,#fbe1e6,#fbf1d6)'};
+  return map[b.colors[0]] || '#f3ece7';
+}
+
+const colorChips = document.getElementById('colorChips');
+colors.forEach(c=>{
+  const chip = document.createElement('div');
+  chip.className='color-chip';
+  chip.innerHTML = `<span class="swatch" style="background:${c.hex}"></span> ${c.name}`;
+  colorChips.appendChild(chip);
+});
+
+const accessoryList = document.getElementById('accessoryList');
+accessories.forEach(a=>{
+  const item = document.createElement('div');
+  item.className='accessory-item';
+  item.innerHTML = `<span class="emoji">${a.emoji}</span><span class="name">${a.name}</span><span class="price">${a.price}</span>`;
+  accessoryList.appendChild(item);
+});
+
+const reviewGrid = document.getElementById('reviewGrid');
+reviews.forEach(r=>{
+  const card = document.createElement('div');
+  card.className='review-card';
+  card.innerHTML = `<div class="stars">★★★★★</div><p class="quote">"${r.text}"</p><div class="name">— ${r.name}</div>`;
+  reviewGrid.appendChild(card);
+});
+
+/* ---------- QUIZ LOGIC ---------- */
+const quizSteps = [
+  {
+    key:'occasion',
+    question:"What's the occasion?",
+    options:[
+      {label:'Birthday', value:'birthday', emoji:'🎂'},
+      {label:'Wedding', value:'wedding', emoji:'💍'},
+      {label:'Anniversary', value:'anniversary', emoji:'💞'},
+      {label:'Just Because', value:'just-because', emoji:'✨'}
+    ]
+  },
+  {
+    key:'color',
+    question:'What color speaks to you?',
+    options:[
+      {label:'Pink & Soft', value:'pink', emoji:'🌸'},
+      {label:'Red & Bold', value:'red', emoji:'🌹'},
+      {label:'White & Classic', value:'white', emoji:'🤍'},
+      {label:'Yellow & Bright', value:'yellow', emoji:'🌻'}
+    ]
+  },
+  {
+    key:'budget',
+    question:"What's your budget?",
+    options:[
+      {label:'Under $50', value:'under50', emoji:'🌼'},
+      {label:'$50 – $100', value:'50-100', emoji:'💐'},
+      {label:'$100 – $200', value:'100-200', emoji:'🌺'},
+      {label:'$200+', value:'200+', emoji:'👑'}
+    ]
+  }
+];
+
+let currentStep = 0;
+let answers = {};
+const quizContent = document.getElementById('quizContent');
+const progressFill = document.getElementById('progressFill');
+
+function renderQuiz(){
+  if(currentStep >= quizSteps.length){
+    renderResult();
+    return;
+  }
+  const step = quizSteps[currentStep];
+  progressFill.style.width = `${(currentStep/quizSteps.length)*100}%`;
+
+  let optionsHtml = step.options.map(opt => `
+    <div class="quiz-option" data-value="${opt.value}">
+      <span class="emoji">${opt.emoji}</span>${opt.label}
+    </div>
+  `).join('');
+
+  quizContent.innerHTML = `
+    <div class="quiz-panel">
+      <div class="quiz-step-label">Step ${currentStep+1} of ${quizSteps.length}</div>
+      <div class="quiz-question">${step.question}</div>
+      <div class="quiz-options">${optionsHtml}</div>
+      ${currentStep > 0 ? '<button class="quiz-back" id="backBtn">&larr; Back</button>' : ''}
+    </div>
+  `;
+
+  quizContent.querySelectorAll('.quiz-option').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      answers[step.key] = el.dataset.value;
+      currentStep++;
+      renderQuiz();
+    });
+  });
+
+  const backBtn = document.getElementById('backBtn');
+  if(backBtn){
+    backBtn.addEventListener('click', ()=>{
+      currentStep--;
+      renderQuiz();
+    });
+  }
+}
+
+function scoreBouquet(b){
+  let score = 0;
+  if(b.occasion.includes(answers.occasion)) score += 3;
+  if(b.colors.includes(answers.color)) score += 2;
+  if(b.budget.includes(answers.budget)) score += 3;
+  return score;
+}
+
+function findBestMatch(){
+  let best = bouquets[0];
+  let bestScore = -1;
+  bouquets.forEach(b=>{
+    const s = scoreBouquet(b);
+    if(s > bestScore){
+      bestScore = s;
+      best = b;
+    }
+  });
+  return best;
+}
+
+function renderResult(){
+  progressFill.style.width = '100%';
+  const match = findBestMatch();
+  quizContent.innerHTML = `
+    <div class="quiz-panel result-panel">
+      <div class="quiz-step-label">Your Match</div>
+      <div class="result-flower-emoji">${match.emoji}</div>
+      <div class="result-name">${match.name}</div>
+      <div class="result-price">$${match.price}</div>
+      <p class="result-desc">${match.desc}</p>
+      <div class="result-actions">
+        <a href="#contact" class="btn btn-primary btn-small">Order This Bouquet</a>
+        <button class="btn btn-outline btn-small" id="retakeBtn">Retake Quiz</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('retakeBtn').addEventListener('click', ()=>{
+    currentStep = 0;
+    answers = {};
+    renderQuiz();
+  });
+}
+
+renderQuiz();
+
+/* ---------- CONTACT FORM ---------- */
+const orderForm = document.getElementById('orderForm');
+const successMsg = document.getElementById('successMsg');
+orderForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  successMsg.style.display = 'block';
+  orderForm.querySelectorAll('input, textarea').forEach(el=> el.disabled = true);
+  orderForm.querySelector('button[type="submit"]').textContent = 'Request Sent ✓';
+  orderForm.querySelector('button[type="submit"]').disabled = true;
+  successMsg.scrollIntoView({behavior:'smooth', block:'nearest'});
+});
+</script>
+
+</body>
+</html>
